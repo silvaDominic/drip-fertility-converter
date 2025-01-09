@@ -36,15 +36,16 @@
                 </a>
             </div>
 
-            <div id="FileUpload" class="file-upload">
-                <input type="file"/>
+            <div class="file-upload">
+                <input id="file-input" type="file"/>
                 <div>
                     <p>Drag your files here or click in this area.</p>
                     <a>Select a file</a>
                 </div>
             </div>
 
-            <button onclick="onConvertData()" class="download-button">Convert Data</button>
+            <button id="convert-button" onclick="onConvertData()" class="download-button">Convert Data</button>
+            <a id="download-link">Download Data</a>
         </div>
     </body>
 </html>

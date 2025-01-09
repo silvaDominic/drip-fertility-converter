@@ -51,7 +51,10 @@ a {
     border: none;
     min-height: 60px;
     margin: auto;
-    display: block;
+}
+
+.download-button, #download-link {
+    display: none;
 }
 
 input[type="file"] {

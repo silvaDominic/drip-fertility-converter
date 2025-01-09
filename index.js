@@ -32,7 +32,7 @@ function onConvertData() {
     switch (fileExtension) {
       case 'json':
         try {
-          const parsedJSON = JSON.parse(fileContentd);
+          const parsedJSON = JSON.parse(fileContent);
           csvData = convertJSONtoCSV(parsedJSON);
         } catch(err) {
           alert('Error parsing JSON data.');
@@ -57,7 +57,7 @@ function onConvertData() {
 }
 
 function convertJSONtoCSV(jsonData) {
-  console.log("convertJSONtoCSV");
+  return Papa.unparse(jsonData);
 }
 
 function parseCSV(csvData) {

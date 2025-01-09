@@ -39,7 +39,7 @@ a {
     text-decoration: none;
 }
 
-.download-button {
+#convert-button {
     background-color: var(--orange);
     border-radius: 2rem;
     padding: 0.75rem 1.5rem;
@@ -53,7 +53,7 @@ a {
     margin: auto;
 }
 
-.download-button, #download-link {
+#convert-button, #download-link {
     display: none;
 }
 
@@ -71,7 +71,7 @@ input[type="file"] {
     opacity: 0;
 }
 
-.file-upload {
+#file-upload-container {
     position: relative;
     background-color: var(--grey);
     padding: 30px;

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link href="styles.css" rel="stylesheet"/>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"
+            integrity="sha512-dfX5uYVXzyU8+KHqj8bjo7UkOdg18PaOtpa48djpNbZHwExddghZ+ZmzWT06R5v6NSk3ZUfsH6FNEDepLx9hPQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer">
+        </script>
+        <script src="index.js" type="application/javascript" defer></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500&display=swap"
+            rel="stylesheet"
+        />
+        <title>Fertility Data Converter</title>
+    </head>
+
+    <body>
+        <div>
+            <h1>Fertility Data Converter</h1>
+            <div>
+                <h2>Upload an exported file from</h2>
+                <select
+                    id="app-type-select"
+                    name="app-type"
+                >
+                    <option value="RYB">Read Your Body</option>
+                    <option value="FLOW">Flo</option>
+                    <option value="CLUE">Clue</option>
+                </select>
+                <h2>and download a CSV compatible with drip.</h2>
+            </div>
+
+            <div>
+                <a
+                    href=""
+                    target="_blank"
+                >
+                    How to export data
+                </a>
+            </div>
+
+            <div id="file-upload-container">
+                <input id="file-input" type="file"/>
+                <div>
+                    <p>Drag your files here or click in this area.</p>
+                    <a>Select a file</a>
+                </div>
+            </div>
+
+            <button id="convert-button" onclick="onConvertData()">Convert Data</button>
+            <a id="download-link">Download Data</a>
+        </div>
+    </body>
+</html>

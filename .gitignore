@@ -1,2 +1,5 @@
 /.idea
+/src/dist
+dist/
+node_modules/
 /external-resources

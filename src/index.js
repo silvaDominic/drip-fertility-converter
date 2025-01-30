@@ -1,14 +1,22 @@
 import { mapRYB } from "./RYB/ryb.js";
+import { convertCVStoJSON, convertJSONtoCSV } from "./utils.js";
 
-const fileInput = document.getElementById('file-input');
-const convertBtn = document.getElementById('convert-button');
+document.addEventListener('DOMContentLoaded', () => {
+  // Convert Data button
+  const convertBtn = document.getElementById('convert-button');
+  convertBtn.addEventListener('click', () => {
+    onConvertData();
+  });
 
-fileInput.addEventListener('change', () => {
-  if (fileInput.files.length > 0) {
-    convertBtn.style.display = 'block';
-  } else {
-    convertBtn.style.display = 'none';
-  }
+  // File input
+  const fileInput = document.getElementById('file-input');
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files.length > 0) {
+      convertBtn.style.display = 'block';
+    } else {
+      convertBtn.style.display = 'none';
+    }
+  });
 });
 
 const APP_TYPE = {
@@ -53,7 +61,8 @@ function onConvertData() {
       case 'csv':
         try {
           const parsedJSON = convertCVStoJSON(fileContent);
-          csvData = mapToDripFormat(APP_TYPE.RYB, parsedJSON);
+          const mappedData = mapToDripFormat(APP_TYPE.RYB, parsedJSON);
+          csvData = convertJSONtoCSV(mappedData);
         } catch(err) {
           alert('Error parsing CSV data.');
           console.error(err);
@@ -67,28 +76,11 @@ function onConvertData() {
   reader.readAsText(file);
 }
 
-
-function convertJSONtoCSV(jsonData) {
-  return Papa.unparse(jsonData, {delimiter: ','});
-}
-
-function convertCVStoJSON(csvData) {
-  return Papa.parse(csvData, {header: true, skipEmptyLines: true});
-}
-
-function parseCSV(csvData) {
-  console.log("parseCSV");
-}
-
-function convertCSVtoCSV(parsedCSV) {
-  console.log("convertCSVtoCSV");
-}
-
 function prepareDownload(csvData) {
   const blob = new Blob([csvData], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
   const downloadLink = document.getElementById('download-link');
   downloadLink.href = url;
-  downloadLink.download = 'drip-data.csv';
+  downloadLink.download = `import-to-drip.csv`;
   downloadLink.style.display = 'inline';
 }

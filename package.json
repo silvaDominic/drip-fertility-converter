@@ -16,5 +16,8 @@
   "devDependencies": {
     "vite": "^6.0.7",
     "vitest": "^3.0.1"
+  },
+  "dependencies": {
+    "papaparse": "^5.5.2"
   }
 }

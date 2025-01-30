@@ -38,7 +38,7 @@ const CERVIX_OPENING_MAP = {
 }
 
 const VAGINAL_SENSATION_MAP = {
-  'low': 1,
+  'low': 0,
   'medium': 2,
   'high': 3,
 }
@@ -59,8 +59,9 @@ export function mapRYB(jsonData) {
       ['temperature.exclude']: false,
       ['bleeding.value']: getBleedingValue(entry['fluid']),
       ['bleeding.exclude']: !!getBleedingValue(entry['fluid']) ? false : null,
-      ['mucus.value']: getCervicalFluidVal(entry['fluid']),
-      ['mucus.feeling']: VAGINAL_SENSATION_MAP[entry['sensation']] || 0, // Default to 0 (nothing)
+      ['mucus.feeling']: VAGINAL_SENSATION_MAP[entry['sensation']] ?? 1, // Default to 1 (nothing)
+      ['mucus.texture']: getCervicalFluidVal(entry['fluid']),
+      ['mucus.value']: null, // Computed value
       ['mucus.exclude']: false,
       ['cervix.opening']: CERVIX_OPENING_MAP[entry['cervixOpenness']] || null,
       ['cervix.firmness']: CERVIX_FIRMNESS_MAP[entry['cervixFirmness']] ?? null,
@@ -103,44 +104,52 @@ export function mapRYB(jsonData) {
 }
 
 export function getBleedingValue(values) {
-  const tokens = values.split(',').map(token => token.trim()).filter((token => Object.keys(BLEEDING_MAP).includes(token)));
+  if (values.trim() === "") return null;
+
+  const bleedingValues = values.split(',')
+    .map(value => value.trim())
+    .filter((value => Object.keys(BLEEDING_MAP).includes(value)));
   // Sort bleeding items based on the defined priority
-  const sortedItems = tokens.sort((a, b) => (BLEEDING_MAP[b] - BLEEDING_MAP[a]));
+  const sortedItems = bleedingValues.sort((a, b) => (BLEEDING_MAP[b] - BLEEDING_MAP[a]));
   // Return the highest-priority item (first in the sorted list)
   return BLEEDING_MAP[sortedItems[0]] || null;  // Return null if no items found
 }
 
 export function getCervicalFluidVal(values) {
-  const tokens = values
+  if (values.trim() === "") return null;
+
+  const fluidTypes = values
     .split(',')
-    .map(token => token.trim())
-    .filter((token => Object.keys(CERVIX_MUCUS_MAP).includes(token)));
+    .map(type => type.trim())
+    .filter((type => Object.keys(CERVIX_MUCUS_MAP).includes(type)));
   // Sort mucus items based on the defined priority
-  const sortedItems = tokens.sort((a, b) => (CERVIX_MUCUS_MAP[b] - CERVIX_MUCUS_MAP[a]));
+  const sortedItems = fluidTypes.sort((a, b) => (CERVIX_MUCUS_MAP[b] - CERVIX_MUCUS_MAP[a]));
   // Return the highest-priority item (first in the sorted list)
-  return CERVIX_MUCUS_MAP[sortedItems[0]] || null; // Return null if no items found
+  return CERVIX_MUCUS_MAP[sortedItems[0]] ?? null; // Return null if no items found
 }
 
 export function getSexType(values) {
   if (values.trim() === "") return null;
 
-  const types = values
+  const contraceptiveType = values
     .split(',')
     .map(token => token.trim());
 
   // If solo is found at all, assume 'solo' sex.
-  if (types.includes(CONTRACEPTIVES_MAP["solo"])) return "solo";
+  if (contraceptiveType.includes(CONTRACEPTIVES_MAP["solo"])) return "solo";
   // RYB doesn't have a 'partner' term and so any sex method that isn't 'solo' is assumed as such.
-  for (const type of types) {
-    if (types.includes(type)) return "partner";
+  for (const type of contraceptiveType) {
+    if (contraceptiveType.includes(type)) return "partner";
   }
 }
 
 export function getContraceptiveTypes(values) {
+  if (values.trim() === "") return null;
+
   // Remove 'solo' type
   const validTypes = values.split(',')
-    .map(token => token.trim())
-    .filter(token => token !== 'solo');
+    .map(type => type.trim())
+    .filter(type => type !== 'solo');
 
   // Marks unsupported types to be a note and uses RYB name, otherwise, maps to associated Drip name
   return validTypes.map((type) => {

@@ -55,17 +55,17 @@ export function mapRYB(jsonData) {
     let notes = "";
     const dripEntry = {
       ['date']: new Date(entry['date']).toISOString().split('T')[0],
-      ['temperature.value']: entry['tempOneValue'] || "",
+      ['temperature.value']: entry['tempOneValue'] || null,
       ['temperature.exclude']: false,
-      ['bleeding.value']: getBleedingValue(entry['fluid']),
-      ['bleeding.exclude']: !!getBleedingValue(entry['fluid']) ? false : null,
+      ['bleeding.value']: getBleedingValue(entry['fluid']) ?? null,
+      ['bleeding.exclude']: getBleedingValue(entry['fluid']) ?? null,
       ['mucus.feeling']: VAGINAL_SENSATION_MAP[entry['sensation']] ?? 1, // Default to 1 (nothing)
-      ['mucus.texture']: getCervicalFluidValue(entry['fluid']),
+      ['mucus.texture']: getCervicalFluidValue(entry['fluid']) ?? null,
       ['mucus.value']: null, // Computed value
       ['mucus.exclude']: false,
-      ['cervix.opening']: CERVIX_OPENING_MAP[entry['cervixOpenness']] || null,
+      ['cervix.opening']: CERVIX_OPENING_MAP[entry['cervixOpenness']] ?? null,
       ['cervix.firmness']: CERVIX_FIRMNESS_MAP[entry['cervixFirmness']] ?? null,
-      ['cervix.position']: CERVIX_POSITION_MAP[entry['cervixHeight']] || null,
+      ['cervix.position']: CERVIX_POSITION_MAP[entry['cervixHeight']] ?? null,
       ['cervix.exclude']: false,
     }
 
@@ -77,13 +77,15 @@ export function mapRYB(jsonData) {
 
     // Set various contraceptive types
     const contraceptiveTypes = getContraceptiveTypes(entry["intercourse"]);
-    contraceptiveTypes.forEach(item => {
-      if (item.asNote) {
-        notes += `Sex: ${ item.name } \n`; // Add unsupported types as notes
-      } else if (item.name) {
-        dripEntry[`sex.${ item.name }`] = true;
-      }
-    });
+    if (contraceptiveTypes) {
+      contraceptiveTypes.forEach(item => {
+        if (item.asNote) {
+          notes += `Sex: ${ item.name } \n`; // Add unsupported types as notes
+        } else if (item.name) {
+          dripEntry[`sex.${ item.name }`] = true;
+        }
+      });
+    }
 
     // Add unsupported values as notes
     if (entry['cervixFirmness'] === 'medium') {
@@ -112,7 +114,7 @@ export function getBleedingValue(valuesStr) {
   // Sort bleeding items based on the defined priority
   const sortedItems = values.sort((a, b) => (BLEEDING_MAP[b] - BLEEDING_MAP[a]));
   // Return the highest-priority item (first in the sorted list)
-  return BLEEDING_MAP[sortedItems[0]] ?? null;  // Return null if no items found
+  return BLEEDING_MAP[sortedItems[0]];  // Return null if no items found
 }
 
 export function getCervicalFluidValue(valuesStr) {
@@ -125,7 +127,7 @@ export function getCervicalFluidValue(valuesStr) {
   // Sort mucus items based on the defined priority
   const sortedItems = fluidTypes.sort((a, b) => (CERVIX_MUCUS_MAP[b] - CERVIX_MUCUS_MAP[a]));
   // Return the highest-priority item (first in the sorted list)
-  return CERVIX_MUCUS_MAP[sortedItems[0]] ?? null; // Return null if no items found
+  return CERVIX_MUCUS_MAP[sortedItems[0]]; // Return null if no items found
 }
 
 export function getSexType(valuesStr) {

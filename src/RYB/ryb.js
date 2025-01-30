@@ -112,7 +112,7 @@ export function getBleedingValue(valuesStr) {
   // Sort bleeding items based on the defined priority
   const sortedItems = values.sort((a, b) => (BLEEDING_MAP[b] - BLEEDING_MAP[a]));
   // Return the highest-priority item (first in the sorted list)
-  return BLEEDING_MAP[sortedItems[0]] || null;  // Return null if no items found
+  return BLEEDING_MAP[sortedItems[0]] ?? null;  // Return null if no items found
 }
 
 export function getCervicalFluidValue(valuesStr) {

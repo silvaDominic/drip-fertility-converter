@@ -60,7 +60,7 @@ export function mapRYB(jsonData) {
       ['bleeding.value']: getBleedingValue(entry['fluid']),
       ['bleeding.exclude']: !!getBleedingValue(entry['fluid']) ? false : null,
       ['mucus.feeling']: VAGINAL_SENSATION_MAP[entry['sensation']] ?? 1, // Default to 1 (nothing)
-      ['mucus.texture']: getCervicalFluidVal(entry['fluid']),
+      ['mucus.texture']: getCervicalFluidValue(entry['fluid']),
       ['mucus.value']: null, // Computed value
       ['mucus.exclude']: false,
       ['cervix.opening']: CERVIX_OPENING_MAP[entry['cervixOpenness']] || null,
@@ -103,22 +103,22 @@ export function mapRYB(jsonData) {
   });
 }
 
-export function getBleedingValue(values) {
-  if (values.trim() === "") return null;
+export function getBleedingValue(valuesStr) {
+  if (valuesStr.trim() === "") return null;
 
-  const bleedingValues = values.split(',')
+  const values = valuesStr.split(',')
     .map(value => value.trim())
     .filter((value => Object.keys(BLEEDING_MAP).includes(value)));
   // Sort bleeding items based on the defined priority
-  const sortedItems = bleedingValues.sort((a, b) => (BLEEDING_MAP[b] - BLEEDING_MAP[a]));
+  const sortedItems = values.sort((a, b) => (BLEEDING_MAP[b] - BLEEDING_MAP[a]));
   // Return the highest-priority item (first in the sorted list)
   return BLEEDING_MAP[sortedItems[0]] || null;  // Return null if no items found
 }
 
-export function getCervicalFluidVal(values) {
-  if (values.trim() === "") return null;
+export function getCervicalFluidValue(valuesStr) {
+  if (valuesStr.trim() === "") return null;
 
-  const fluidTypes = values
+  const fluidTypes = valuesStr
     .split(',')
     .map(type => type.trim())
     .filter((type => Object.keys(CERVIX_MUCUS_MAP).includes(type)));
@@ -128,10 +128,10 @@ export function getCervicalFluidVal(values) {
   return CERVIX_MUCUS_MAP[sortedItems[0]] ?? null; // Return null if no items found
 }
 
-export function getSexType(values) {
-  if (values.trim() === "") return null;
+export function getSexType(valuesStr) {
+  if (valuesStr.trim() === "") return null;
 
-  const contraceptiveType = values
+  const contraceptiveType = valuesStr
     .split(',')
     .map(token => token.trim());
 
@@ -143,11 +143,11 @@ export function getSexType(values) {
   }
 }
 
-export function getContraceptiveTypes(values) {
-  if (values.trim() === "") return null;
+export function getContraceptiveTypes(valuesStr) {
+  if (valuesStr.trim() === "") return null;
 
   // Remove 'solo' type
-  const validTypes = values.split(',')
+  const validTypes = valuesStr.split(',')
     .map(type => type.trim())
     .filter(type => type !== 'solo');
 

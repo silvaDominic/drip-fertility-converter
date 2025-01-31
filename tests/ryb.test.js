@@ -1,4 +1,4 @@
-import { getBleedingValue, getCervicalFluidValue, getContraceptiveTypes, getSexType, mapRYB } from '../src/RYB/ryb.js';
+import { getBleedingValue, getCervicalFluidValue, getContraceptiveTypes, getSexType, mapRYB } from '../src/mappers/ryb.js';
 import { expect, describe, it } from 'vitest';
 
 describe("RYB", () => {

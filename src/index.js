@@ -1,4 +1,4 @@
-import { mapRYB } from "./RYB/ryb.js";
+import { mapRYB } from "./mappers/ryb.js";
 import { convertCVStoJSON, convertJSONtoCSV } from "./utils.js";
 
 const APP_TYPE = {

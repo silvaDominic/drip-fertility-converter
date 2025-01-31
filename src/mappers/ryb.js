@@ -1,3 +1,8 @@
+/*
+Mapper for Read Your Body app
+https://readyourbody.com/
+*/
+
 const UNSUPPORTED = 'unsupported';
 const CONTRACEPTIVES_MAP = {
   "solo": "solo",

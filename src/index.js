@@ -1,15 +1,30 @@
 import { mapRYB } from "./RYB/ryb.js";
 import { convertCVStoJSON, convertJSONtoCSV } from "./utils.js";
 
+const APP_TYPE = {
+  RYB: "RYB",
+}
+
+// DEV_NOTE: ADD EXPORT DATA LINK HERE
+const HELP_LINK_MAP = {
+  [APP_TYPE.RYB]: 'https://readyourbody.zendesk.com/hc/en-gb/articles/360015907180-Manual-backup-RYB-JSON-CSV-ZIP',
+}
+
+let selectedApp = null;
+
 document.addEventListener('DOMContentLoaded', () => {
-  // Convert Data button
   const convertBtn = document.getElementById('convert-button');
+  const fileInput = document.getElementById('file-input');
+  const appTypeSelectEl = document.getElementById('app-type-select'); // Yields 2 elements
+  const selectedAppEl = document.getElementsByClassName('selected-app-text');
+  const howToLinkEl = document.getElementById('how-to-link');
+  const howToDisclaimerEl = document.getElementById('how-to-disclaimer');
+
+  // 'CONVERT' BUTTON
   convertBtn.addEventListener('click', () => {
     onConvertData();
   });
-
-  // File input
-  const fileInput = document.getElementById('file-input');
+  // FILE INPUT
   fileInput.addEventListener('change', () => {
     if (fileInput.files.length > 0) {
       convertBtn.style.display = 'block';
@@ -17,12 +32,57 @@ document.addEventListener('DOMContentLoaded', () => {
       convertBtn.style.display = 'none';
     }
   });
+
+  // DYNAMIC CHANGES AROUND SELECTED APP TYPE
+  // Set defaults
+  const currentlySelectedOption = appTypeSelectEl.selectedOptions[0]
+  selectedAppEl[0].innerText = currentlySelectedOption.text;
+  handleHelpLink(currentlySelectedOption);
+
+  // Dynamically change text/link when <select> is changed
+  appTypeSelectEl.addEventListener('change', (e) => {
+    const el = e.target;
+    selectedAppEl[0].innerText = el.selectedOptions[0].text;
+    selectedAppEl[1].innerText = el.selectedOptions[0].text;
+
+    handleHelpLink(el);
+    selectedApp = el.value;
+  });
+
+  // Toggle help link helpers
+  function enableHelpLink() {
+    howToDisclaimerEl.style.display = 'none';
+    howToLinkEl.style.display = 'block';
+  }
+
+  function disableHelpLink() {
+    howToDisclaimerEl.style.display = 'block';
+    howToLinkEl.style.display = 'none';
+    selectedAppEl[1].innerText = appTypeSelectEl.selectedOptions[0].text;
+  }
+
+  function disableHelpBlock() {
+    howToDisclaimerEl.style.display = 'none';
+    howToLinkEl.style.display = 'none';
+  }
+
+  function handleHelpLink(option) {
+    // If there is an export help link, show it
+    if (HELP_LINK_MAP[option.value]) {
+      enableHelpLink();
+      howToLinkEl.href = HELP_LINK_MAP[option.value];
+      // Show nothing if the default (placeholder) value is selected
+    } else if (option.value === 'DEFAULT') {
+      disableHelpBlock();
+      // If there is NO export help, show disclaimer instead
+    } else {
+      disableHelpLink();
+      howToLinkEl.href = '#';
+    }
+  }
 });
 
-const APP_TYPE = {
-  RYB: "RYB",
-}
-
+// DEV_NOTE: ADD ASSOCIATED MAPPING FUNCTIONS HERE
 function mapToDripFormat(appType, jsonData) {
   switch(appType) {
     case 'RYB':
@@ -31,8 +91,6 @@ function mapToDripFormat(appType, jsonData) {
 }
 
 function onConvertData() {
-  console.log("Converting data...");
-
   const fileInput = document.getElementById('file-input');
   const file = fileInput.files[0];
 
@@ -81,6 +139,6 @@ function prepareDownload(csvData) {
   const url = URL.createObjectURL(blob);
   const downloadLink = document.getElementById('download-link');
   downloadLink.href = url;
-  downloadLink.download = `import-to-drip.csv`;
+  downloadLink.download = `${selectedApp}-to-drip.csv`;
   downloadLink.style.display = 'inline';
 }

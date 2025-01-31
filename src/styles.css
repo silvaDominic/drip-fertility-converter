@@ -28,6 +28,10 @@ body {
     height: 100vh;
 }
 
+h1 {
+    font-size: 2.5rem;
+}
+
 h1,
 h2 {
     text-align: center;
@@ -50,17 +54,13 @@ a {
     text-align: center;
 }
 
-.select-wrapper {
-    text-align: center;
-    display: inline;
-}
-
-.select-wrapper select {
-    margin: 0 0.5rem;
+select {
+    display: block;
+    margin: 0 auto;
     padding: 0.5rem 1rem;
     background-color: var(--orange);
     color: white;
-    font-size: 1rem;
+    font-size: 2.5rem;
     font-weight: 700;
     text-align: center;
     text-decoration: none;
@@ -73,7 +73,17 @@ a {
 }
 
 .title {
-    display: inline;
+    display: block;
+    margin-top: 0.5rem;
+    margin-bottom: 5rem;
+}
+
+.sub-title {
+    font-weight: 300;
+}
+
+.title-wrapper {
+    margin-bottom: 4rem;
 }
 
 #how-to-wrapper {
@@ -90,7 +100,7 @@ a {
     font-weight: 700;
 }
 
-#drip-text {
+.drip-text {
     color: var(--dark-mint);
 }
 
@@ -102,6 +112,7 @@ a {
     background-color: var(--orange);
     color: var(--mint);
     font-weight: 700;
+    font-size: 1.25rem;
     text-align: center;
     text-decoration: none;
     border-radius: 2rem;

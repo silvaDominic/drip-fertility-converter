@@ -105,7 +105,7 @@ export function mapRYB(jsonData) {
     dripEntry['note.value'] = notes;
 
     return dripEntry;
-  })
+  }).filter(entry => entry !== null); // Exclude any null (dateless) entries
 }
 
 export function getBleedingValue(valuesStr) {

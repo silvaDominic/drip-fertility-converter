@@ -15,6 +15,7 @@ let selectedApp = null;
 document.addEventListener('DOMContentLoaded', () => {
   const convertBtn = document.getElementById('convert-button');
   const fileInput = document.getElementById('file-input');
+  const fileUploadContainerEl = document.getElementById('file-upload-container');
   const appTypeSelectEl = document.getElementById('app-type-select'); // Yields 2 elements
   const selectedAppEl = document.getElementsByClassName('selected-app-text');
   const howToLinkEl = document.getElementById('how-to-link');
@@ -37,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Set defaults
   const currentlySelectedOption = appTypeSelectEl.selectedOptions[0]
   selectedAppEl[0].innerText = currentlySelectedOption.text;
-  handleHelpLink(currentlySelectedOption);
+  onSelectChange(currentlySelectedOption);
 
   // Dynamically change text/link when <select> is changed
   appTypeSelectEl.addEventListener('change', (e) => {
@@ -45,11 +46,32 @@ document.addEventListener('DOMContentLoaded', () => {
     selectedAppEl[0].innerText = el.selectedOptions[0].text;
     selectedAppEl[1].innerText = el.selectedOptions[0].text;
 
-    handleHelpLink(el);
+    onSelectChange(el);
     selectedApp = el.value;
   });
 
-  // Toggle help link helpers
+  /**
+   * Handles toggling help link text and whether the file input is visible/enabled.
+   * @param option The <option> element
+   */
+  function onSelectChange(option) {
+    enableFileInput();
+    // If there is an export help link, show it
+    if (HELP_LINK_MAP[option.value]) {
+      enableHelpLink();
+      howToLinkEl.href = HELP_LINK_MAP[option.value];
+      // Show nothing if the default (placeholder) value is selected; disable file input
+    } else if (option.value === 'DEFAULT') {
+      disableHelpBlock();
+      disableFileInput();
+      // If there is NO export help, show disclaimer instead
+    } else {
+      disableHelpLink();
+      howToLinkEl.href = '#';
+    }
+  }
+
+  // HELPERS
   function enableHelpLink() {
     howToDisclaimerEl.style.display = 'none';
     howToLinkEl.style.display = 'block';
@@ -66,20 +88,16 @@ document.addEventListener('DOMContentLoaded', () => {
     howToLinkEl.style.display = 'none';
   }
 
-  function handleHelpLink(option) {
-    // If there is an export help link, show it
-    if (HELP_LINK_MAP[option.value]) {
-      enableHelpLink();
-      howToLinkEl.href = HELP_LINK_MAP[option.value];
-      // Show nothing if the default (placeholder) value is selected
-    } else if (option.value === 'DEFAULT') {
-      disableHelpBlock();
-      // If there is NO export help, show disclaimer instead
-    } else {
-      disableHelpLink();
-      howToLinkEl.href = '#';
-    }
+  function disableFileInput() {
+    fileInput.disabled = true;
+    fileUploadContainerEl.style.opacity = '0.5';
   }
+
+  function enableFileInput() {
+    fileInput.disabled = false;
+    fileUploadContainerEl.style.opacity = '1';
+  }
+
 });
 
 // DEV_NOTE: ADD ASSOCIATED MAPPING FUNCTIONS HERE

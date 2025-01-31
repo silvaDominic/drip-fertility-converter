@@ -153,6 +153,7 @@ input[type="file"] {
     text-align: center;
     font-size: 20px;
     font-weight: 500;
+    opacity: 0.5;
 }
 
 .read-error {

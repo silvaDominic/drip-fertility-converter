@@ -1,7 +1,10 @@
 import Papa from 'papaparse';
 
 export function convertJSONtoCSV(jsonData) {
-  return Papa.unparse(jsonData, { delimiter: ',', linebreak: "\n" });
+  console.log("JSON: ", jsonData);
+  const result = Papa.unparse(jsonData, { delimiter: ',', linebreak: "\n" });
+  console.log("CSV: ", result);
+  return result;
 }
 
 export function convertCVStoJSON(csvData) {

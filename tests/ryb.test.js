@@ -4,6 +4,16 @@ import { expect, describe, it } from 'vitest';
 describe("RYB", () => {
   describe("mapRYB", () => {
     describe("when mapping from RYB to drip", () => {
+      it('includes unsupported sex as a note', () => {
+        const input = {
+            data: [{ date: new Date().toISOString(), intercourse: 'cervicalCap'}]
+        };
+        console.log(input);
+        const result = mapRYB(input)[0];
+        expect(result).toHaveProperty('sex.other', true);
+        expect(result).toHaveProperty('sex.note', 'Sex: cervicalCap');
+      });
+
       it('excludes bad entries', () => {
         const input = {
           data: [
@@ -23,7 +33,7 @@ describe("RYB", () => {
         expect(result.length).toBe(2);
       });
 
-      it('converts the date to ISO-8601', () => {
+      it('converts the date to ISO-8601 (YYYY-MM-DD)', () => {
         const input = {
           data: [{ date: "2025-01-01T00:00:00.000Z" }]
         };
@@ -48,9 +58,21 @@ describe("RYB", () => {
         expect(result).toHaveProperty('cervix.firmness', null);
         expect(result).toHaveProperty('cervix.position', null);
         expect(result).toHaveProperty('cervix.exclude', false);
+        expect(result).toHaveProperty('sex.solo', null);
+        expect(result).toHaveProperty('sex.partner', null);
+        expect(result).toHaveProperty('sex.condom', null);
+        expect(result).toHaveProperty('sex.pill', null);
+        expect(result).toHaveProperty('sex.iud', null);
+        expect(result).toHaveProperty('sex.patch', null);
+        expect(result).toHaveProperty('sex.ring', null);
+        expect(result).toHaveProperty('sex.implant', null);
+        expect(result).toHaveProperty('sex.diaphragm', null);
+        expect(result).toHaveProperty('sex.none', null);
+        expect(result).toHaveProperty('sex.other', null);
+        expect(result).toHaveProperty('sex.note', null);
         expect(result).toHaveProperty('note.value', '');
 
-        expect(Object.keys(result).length).toBe(14);
+        expect(Object.keys(result).length).toBe(26);
       });
     })
   });
@@ -116,7 +138,7 @@ describe("RYB", () => {
       });
 
       it("returns a list of unsupported 'drip' types with the need of a note", () => {
-        const input = "condom,diaphragm,cervicalCap,withdrawal";
+        const input = "cervicalCap,withdrawal";
         const result = getContraceptiveTypes(input);
         expect(result).toContainEqual(
           expect.objectContaining({ name: "cervicalCap", asNote: true })
@@ -124,7 +146,7 @@ describe("RYB", () => {
         expect(result).toContainEqual(
           expect.objectContaining({ name: "withdrawal", asNote: true })
         );
-        expect(result.length).toBe(4);
+        expect(result.length).toBe(2);
       });
 
       it("excludes the 'solo' option", () => {
@@ -136,6 +158,13 @@ describe("RYB", () => {
           expect(item).not.toHaveProperty('name', 'solo');
         });
         expect(result.length).toBe(inputLength - 1);
+      });
+
+      it("doesn't mark RYB 'other' with need for note", () => {
+        const input = "other";
+        expect(getContraceptiveTypes(input)[0]).toEqual(
+          { name: "other", asNote: false }
+        );
       });
     });
   });

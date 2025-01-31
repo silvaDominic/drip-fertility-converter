@@ -70,6 +70,18 @@ export function mapRYB(jsonData) {
       ['cervix.firmness']: CERVIX_FIRMNESS_MAP[entry['cervixFirmness']] ?? null,
       ['cervix.position']: CERVIX_POSITION_MAP[entry['cervixHeight']] ?? null,
       ['cervix.exclude']: false,
+      ['sex.solo']: null,
+      ['sex.partner']: null,
+      ['sex.condom']: null,
+      ['sex.pill']: null,
+      ['sex.iud']: null,
+      ['sex.patch']: null,
+      ['sex.ring']: null,
+      ['sex.implant']: null,
+      ['sex.diaphragm']: null,
+      ['sex.none']: null,
+      ['sex.other']: null,
+      ['sex.note']: null,
     }
 
     // Set sex type (solo/partner)

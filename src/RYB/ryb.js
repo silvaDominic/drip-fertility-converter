@@ -1,16 +1,18 @@
+const UNSUPPORTED = 'unsupported';
 const CONTRACEPTIVES_MAP = {
   "solo": "solo",
-  "unprotected": "other",
+  "unprotected": "none",
   "condom": "condom",
   "iud": "iud",
-  "non_piv": "other",
-  "sterilisation": "other",
-  "cervicalCap": "other",
-  "insemination": "other",
-  "withdrawal": "other",
+  "non_piv": UNSUPPORTED,
+  "sterilisation": UNSUPPORTED,
+  "cervicalCap": UNSUPPORTED,
+  "insemination": UNSUPPORTED,
+  "withdrawal": UNSUPPORTED,
   "diaphragm": "diaphragm",
   "other": "other",
 }
+
 
 const BLEEDING_MAP = {
   'spotting': 0,
@@ -95,7 +97,8 @@ export function mapRYB(jsonData) {
     if (contraceptiveTypes) {
       contraceptiveTypes.forEach(item => {
         if (item.asNote) {
-          notes += `Sex: ${ item.name } \n`; // Add unsupported types as notes
+          dripEntry['sex.other'] = true;
+          dripEntry['sex.note'] = `Sex: ${ item.name }`; // Add unsupported types as a note
         } else if (item.name) {
           dripEntry[`sex.${ item.name }`] = true;
         }
@@ -168,9 +171,9 @@ export function getContraceptiveTypes(valuesStr) {
     .map(type => type.trim())
     .filter(type => type !== 'solo');
 
-  // Marks unsupported types to be a note and uses RYB name, otherwise, maps to associated Drip name
+  // Marks unsupported types to be a note and uses RYB name, otherwise maps to associated Drip name
   return validTypes.map((type) => {
-    if (CONTRACEPTIVES_MAP[type] === 'other') {
+    if (CONTRACEPTIVES_MAP[type] === UNSUPPORTED) {
       return { name: type, asNote: true }
     } else {
       return { name: CONTRACEPTIVES_MAP[type], asNote: false }

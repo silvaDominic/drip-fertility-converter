@@ -61,7 +61,7 @@ export function mapRYB(jsonData) {
       ['temperature.value']: entry['tempOneValue'] || null,
       ['temperature.exclude']: false,
       ['bleeding.value']: getBleedingValue(entry['fluid']) ?? null,
-      ['bleeding.exclude']: getBleedingValue(entry['fluid']) ?? null,
+      ['bleeding.exclude']: getBleedingValue(entry['fluid']) != null ? false : null, // Bleeding value/exclude must always be together AND valid
       ['mucus.feeling']: VAGINAL_SENSATION_MAP[entry['sensation']] ?? 1, // Default to 1 (nothing)
       ['mucus.texture']: getCervicalFluidValue(entry['fluid']) ?? null,
       ['mucus.value']: null, // Computed value

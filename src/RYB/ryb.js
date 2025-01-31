@@ -52,6 +52,9 @@ const CERVIX_MUCUS_MAP = {
 
 export function mapRYB(jsonData) {
   return jsonData.data.map(entry => {
+    // If no date prop OR invalid date
+    if (!entry?.date?.trim()) return null;
+
     let notes = "";
     const dripEntry = {
       ['date']: new Date(entry['date']).toISOString().split('T')[0],
@@ -102,11 +105,11 @@ export function mapRYB(jsonData) {
     dripEntry['note.value'] = notes;
 
     return dripEntry;
-  });
+  })
 }
 
 export function getBleedingValue(valuesStr) {
-  if (valuesStr.trim() === "") return null;
+  if (!valuesStr || valuesStr.trim() === "") return null;
 
   const values = valuesStr.split(',')
     .map(value => value.trim())
@@ -118,7 +121,7 @@ export function getBleedingValue(valuesStr) {
 }
 
 export function getCervicalFluidValue(valuesStr) {
-  if (valuesStr.trim() === "") return null;
+  if (!valuesStr || valuesStr.trim() === "") return null;
 
   const fluidTypes = valuesStr
     .split(',')
@@ -131,7 +134,7 @@ export function getCervicalFluidValue(valuesStr) {
 }
 
 export function getSexType(valuesStr) {
-  if (valuesStr.trim() === "") return null;
+  if (!valuesStr || valuesStr.trim() === "") return null;
 
   const contraceptiveType = valuesStr
     .split(',')
@@ -146,7 +149,7 @@ export function getSexType(valuesStr) {
 }
 
 export function getContraceptiveTypes(valuesStr) {
-  if (valuesStr.trim() === "") return null;
+  if (!valuesStr || valuesStr.trim() === "") return null;
 
   // Remove 'solo' type
   const validTypes = valuesStr.split(',')

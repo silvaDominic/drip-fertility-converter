@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { convertToMilitaryTime, formatTemperature, mapPremom } from '../src/mappers/premom.js';
+import { mapRYB } from "../src/mappers/ryb.js";
 
 describe("Premom", () => {
   describe("mapPremom", () => {
@@ -18,6 +19,13 @@ describe("Premom", () => {
 
         expect(Object.keys(result).length).toBe(4);
       });
+    });
+
+    it('converts the date to ISO-8601 (YYYY-MM-DD)', () => {
+      const input = {
+        data: [{ date: "2025-01-01" }]
+      };
+      expect(mapRYB(input)[0].date).toBe("2025-01-01");
     });
   });
 

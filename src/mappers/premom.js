@@ -5,7 +5,7 @@ export function mapPremom(jsonData) {
 
     const [time, timeIndicator] = getTimeAndIndicator(entry['Time(BBT)']) || [null, null];
     return {
-      ['date']: new Date(entry['Date']),
+      ['date']: new Date(entry['Date']).toISOString(),
       ['temperature.time']: convertToMilitaryTime(time, timeIndicator) || null,
       ['temperature.value']: formatTemperature(entry['Temperature']) || null,
       ['temperature.exclude']: false,

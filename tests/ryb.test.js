@@ -1,4 +1,11 @@
-import { getBleedingValue, getCervicalFluidValue, getContraceptiveTypes, getSexType, mapRYB } from '../src/mappers/ryb.js';
+import {
+  getBleedingValue,
+  getCervicalFluidValue,
+  getContraceptiveTypes,
+  getMilitaryTime,
+  getSexType,
+  mapRYB
+} from '../src/mappers/ryb.js';
 import { expect, describe, it } from 'vitest';
 
 describe("RYB", () => {
@@ -166,6 +173,13 @@ describe("RYB", () => {
           { name: "other", asNote: false }
         );
       });
+    });
+  });
+
+  describe('getMilitaryTime', () => {
+    it('should return the correct local time in military time', () => {
+      const input = new Date("2025-02-01T00:00:00.000Z");
+      expect(getMilitaryTime(input)).toBe("19:00");
     });
   });
 });

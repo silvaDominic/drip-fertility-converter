@@ -3,8 +3,6 @@ Mapper for Read Your Body app
 https://readyourbody.com/
 */
 
-import { getMilitaryTime } from "../utils.js";
-
 const UNSUPPORTED = 'unsupported';
 const CONTRACEPTIVES_MAP = {
   "solo": "solo",
@@ -188,4 +186,11 @@ export function getContraceptiveTypes(valuesStr) {
       return { name: CONTRACEPTIVES_MAP[type], asNote: false }
     }
   });
+}
+
+export function getMilitaryTime(dateStr) {
+  if (!dateStr) return null;
+
+  const localDate = new Date(dateStr);
+  return `${localDate.getHours().toString().padStart(2, '0')}:${localDate.getMinutes().toString().padStart(2, '0')}`;
 }

@@ -1,13 +1,16 @@
 import { mapRYB } from "./mappers/ryb.js";
 import { convertCVStoJSON, convertJSONtoCSV } from "./utils.js";
+import { mapPremom } from "./mappers/premom.js";
 
 const APP_TYPE = {
   RYB: "RYB",
+  PREMOM: "PREMOM",
 }
 
 // DEV_NOTE: ADD EXPORT DATA LINK HERE
 const HELP_LINK_MAP = {
   [APP_TYPE.RYB]: 'https://readyourbody.zendesk.com/hc/en-gb/articles/360015907180-Manual-backup-RYB-JSON-CSV-ZIP',
+  [APP_TYPE.PREMOM]: 'https://support.premom.com/hc/en-us/articles/4416350070035-Q6-How-do-I-export-BBT-and-share-via-Email',
 }
 
 let selectedApp = null;
@@ -23,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 'CONVERT' BUTTON
   convertBtn.addEventListener('click', () => {
-    onConvertData();
+    onConvertData(appTypeSelectEl.selectedOptions[0].value);
   });
   // FILE INPUT
   fileInput.addEventListener('change', () => {
@@ -108,12 +111,16 @@ document.addEventListener('DOMContentLoaded', () => {
 // DEV_NOTE: ADD ASSOCIATED MAPPING FUNCTIONS HERE
 function mapToDripFormat(appType, jsonData) {
   switch(appType) {
-    case 'RYB':
+    case APP_TYPE.RYB:
       return mapRYB(jsonData);
+    case APP_TYPE.PREMOM:
+      return mapPremom(jsonData);
+    default:
+      return [];
   }
 }
 
-function onConvertData() {
+function onConvertData(appType) {
   const fileInput = document.getElementById('file-input');
   const file = fileInput.files[0];
 
@@ -142,7 +149,7 @@ function onConvertData() {
       case 'csv':
         try {
           const parsedJSON = convertCVStoJSON(fileContent);
-          const mappedData = mapToDripFormat(APP_TYPE.RYB, parsedJSON);
+          const mappedData = mapToDripFormat(appType, parsedJSON);
           csvData = convertJSONtoCSV(mappedData);
         } catch(err) {
           alert('Error parsing CSV data.');

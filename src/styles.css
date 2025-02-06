@@ -139,6 +139,10 @@ input[type="file"] {
     cursor: pointer;
 }
 
+input[disabled=""] {
+    cursor: default;
+}
+
 #file-upload-container {
     position: relative;
     margin-top: 3rem;

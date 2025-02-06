@@ -115,8 +115,6 @@ function mapToDripFormat(appType, jsonData) {
       return mapRYB(jsonData);
     case APP_TYPE.PREMOM:
       return mapPremom(jsonData);
-    default:
-      return [];
   }
 }
 

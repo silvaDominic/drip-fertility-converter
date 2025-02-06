@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const convertBtn = document.getElementById('convert-button');
   const fileInput = document.getElementById('file-input');
   const fileUploadContainerEl = document.getElementById('file-upload-container');
-  const appTypeSelectEl = document.getElementById('app-type-select'); // Yields 2 elements
+  const appTypeSelectEl = document.getElementById('app-type-select');
   const selectedAppEl = document.getElementsByClassName('selected-app-text');
   const howToLinkEl = document.getElementById('how-to-link');
   const howToDisclaimerEl = document.getElementById('how-to-disclaimer');
@@ -55,19 +55,23 @@ document.addEventListener('DOMContentLoaded', () => {
    * @param option The <option> element
    */
   function onSelectChange(option) {
-    enableFileInput();
+    if (APP_TYPE[option.value]) {
+      enableFileInput();
+      // If there is NO matching app (or DEFAULT), disable input
+    } else {
+      disableFileInput();
+    }
+
     // If there is an export help link, show it
     if (HELP_LINK_MAP[option.value]) {
       enableHelpLink();
       howToLinkEl.href = HELP_LINK_MAP[option.value];
-      // Show nothing if the default (placeholder) value is selected; disable file input
+    // If the default option is select, hide the whole block
     } else if (option.value === 'DEFAULT') {
       disableHelpBlock();
-      disableFileInput();
-      // If there is NO export help, show disclaimer instead
+    // Otherwise disable the link
     } else {
       disableHelpLink();
-      howToLinkEl.href = '#';
     }
   }
 
@@ -80,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function disableHelpLink() {
     howToDisclaimerEl.style.display = 'block';
     howToLinkEl.style.display = 'none';
+    howToLinkEl.href = '#';
     selectedAppEl[1].innerText = appTypeSelectEl.selectedOptions[0].text;
   }
 

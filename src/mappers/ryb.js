@@ -3,6 +3,8 @@ Mapper for Read Your Body app
 https://readyourbody.com/
 */
 
+import { getMilitaryTime } from "../utils.js";
+
 const UNSUPPORTED = 'unsupported';
 const CONTRACEPTIVES_MAP = {
   "solo": "solo",
@@ -63,8 +65,10 @@ export function mapRYB(jsonData) {
     if (!entry?.date?.trim()) return null;
 
     let notes = "";
+
     const dripEntry = {
-      ['date']: new Date(entry['date']).toISOString().split('T')[0],
+      ['date']: new Date(entry['date']).toISOString().split('T')[0], // RYB doesn't localize date so just split the YYYY, MM, DD.
+      ['temperature.time']: getMilitaryTime(entry['tempOne']) || null,
       ['temperature.value']: entry['tempOneValue'] || null,
       ['temperature.exclude']: false,
       ['bleeding.value']: getBleedingValue(entry['fluid']) ?? null,

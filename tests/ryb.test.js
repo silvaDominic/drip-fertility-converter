@@ -8,7 +8,6 @@ describe("RYB", () => {
         const input = {
             data: [{ date: new Date().toISOString(), intercourse: 'cervicalCap'}]
         };
-        console.log(input);
         const result = mapRYB(input)[0];
         expect(result).toHaveProperty('sex.other', true);
         expect(result).toHaveProperty('sex.note', 'Sex: cervicalCap');
@@ -46,6 +45,7 @@ describe("RYB", () => {
         };
         const result = mapRYB(input)[0];
         expect(result).toHaveProperty('date'); // Has no default
+        expect(result).toHaveProperty('temperature.time', null);
         expect(result).toHaveProperty('temperature.value', null);
         expect(result).toHaveProperty('temperature.exclude', false);
         expect(result).toHaveProperty('bleeding.value', null);
@@ -72,7 +72,7 @@ describe("RYB", () => {
         expect(result).toHaveProperty('sex.note', null);
         expect(result).toHaveProperty('note.value', '');
 
-        expect(Object.keys(result).length).toBe(26);
+        expect(Object.keys(result).length).toBe(27);
       });
     })
   });

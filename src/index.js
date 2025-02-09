@@ -1,16 +1,20 @@
 import { mapRYB } from "./mappers/ryb.js";
 import { convertCVStoJSON, convertJSONtoCSV } from "./utils.js";
 import { mapPremom } from "./mappers/premom.js";
+import { mapOvagraph } from "./mappers/ovagraph.js";
 
+// DEV_NOTE: ADD APP TYPE HERE
 const APP_TYPE = {
   RYB: "RYB",
   PREMOM: "PREMOM",
+  OVA_GRAPH: "OVA_GRAPH",
 }
 
 // DEV_NOTE: ADD EXPORT DATA LINK HERE
 const HELP_LINK_MAP = {
   [APP_TYPE.RYB]: 'https://readyourbody.zendesk.com/hc/en-gb/articles/360015907180-Manual-backup-RYB-JSON-CSV-ZIP',
   [APP_TYPE.PREMOM]: 'https://support.premom.com/hc/en-us/articles/4416350070035-Q6-How-do-I-export-BBT-and-share-via-Email',
+  [APP_TYPE.OVA_GRAPH]: 'https://www.ovagraph.com/faq/can-i-export-my-data-ovagraphcom',
 }
 
 let selectedApp = null;
@@ -41,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Set defaults
   const currentlySelectedOption = appTypeSelectEl.selectedOptions[0]
   selectedAppEl[0].innerText = currentlySelectedOption.text;
+  selectedApp = currentlySelectedOption.value;
   onSelectChange(currentlySelectedOption);
 
   // Dynamically change text/link when <select> is changed
@@ -105,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
     fileInput.disabled = false;
     fileUploadContainerEl.style.opacity = '1';
   }
-
 });
 
 // DEV_NOTE: ADD ASSOCIATED MAPPING FUNCTIONS HERE
@@ -115,6 +119,8 @@ function mapToDripFormat(appType, jsonData) {
       return mapRYB(jsonData);
     case APP_TYPE.PREMOM:
       return mapPremom(jsonData);
+    case APP_TYPE.OVA_GRAPH:
+      return mapOvagraph(jsonData);
   }
 }
 
@@ -148,6 +154,7 @@ function onConvertData(appType) {
         try {
           const parsedJSON = convertCVStoJSON(fileContent);
           const mappedData = mapToDripFormat(appType, parsedJSON);
+          console.log(mappedData)
           csvData = convertJSONtoCSV(mappedData);
         } catch(err) {
           alert('Error parsing CSV data.');

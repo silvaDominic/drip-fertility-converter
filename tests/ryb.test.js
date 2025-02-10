@@ -59,7 +59,6 @@ describe("RYB", () => {
         expect(result).toHaveProperty('bleeding.exclude', null);
         expect(result).toHaveProperty('mucus.feeling', 1);
         expect(result).toHaveProperty('mucus.texture', null);
-        expect(result).toHaveProperty('mucus.value', null);
         expect(result).toHaveProperty('mucus.exclude', false);
         expect(result).toHaveProperty('cervix.opening', null);
         expect(result).toHaveProperty('cervix.firmness', null);
@@ -79,9 +78,9 @@ describe("RYB", () => {
         expect(result).toHaveProperty('sex.note', null);
         expect(result).toHaveProperty('note.value', '');
 
-        expect(Object.keys(result).length).toBe(27);
+        expect(Object.keys(result).length).toBe(26);
       });
-    })
+    });
   });
 
   describe("getBleedingValue", () => {

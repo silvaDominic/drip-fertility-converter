@@ -3,6 +3,8 @@ Mapper for Read Your Body app
 https://readyourbody.com/
 */
 
+import { DRIP_PROPS } from "../constants.js";
+
 const UNSUPPORTED = 'unsupported';
 const CONTRA_MAP = {
   "solo": "solo",
@@ -65,32 +67,31 @@ export function mapRYB(jsonData) {
     let notes = "";
 
     const dripEntry = {
-      ['date']: new Date(entry['date']).toISOString().split('T')[0], // RYB doesn't localize date so just split the YYYY, MM, DD.
-      ['temperature.time']: getMilitaryTime(entry['tempOne']) || null,
-      ['temperature.value']: entry['tempOneValue'] || null,
-      ['temperature.exclude']: false,
-      ['bleeding.value']: getBleedingValue(entry['fluid']) ?? null,
-      ['bleeding.exclude']: getBleedingValue(entry['fluid']) != null ? false : null, // Bleeding value/exclude must always be together AND valid
-      ['mucus.feeling']: VAG_SENS_MAP[entry['sensation']] ?? 1, // Default to 1 (nothing)
-      ['mucus.texture']: getCervicalFluidValue(entry['fluid']) ?? null,
-      ['mucus.value']: null, // Computed value
-      ['mucus.exclude']: false,
-      ['cervix.opening']: C_OPENING_MAP[entry['cervixOpenness']] ?? null,
-      ['cervix.firmness']: C_FIRMNESS_MAP[entry['cervixFirmness']] ?? null,
-      ['cervix.position']: C_POS_MAP[entry['cervixHeight']] ?? null,
-      ['cervix.exclude']: false,
-      ['sex.solo']: null,
-      ['sex.partner']: null,
-      ['sex.condom']: null,
-      ['sex.pill']: null,
-      ['sex.iud']: null,
-      ['sex.patch']: null,
-      ['sex.ring']: null,
-      ['sex.implant']: null,
-      ['sex.diaphragm']: null,
-      ['sex.none']: null,
-      ['sex.other']: null,
-      ['sex.note']: null,
+      [DRIP_PROPS.DATE]: new Date(entry['date']).toISOString().split('T')[0], // RYB doesn't localize date so just split the YYYY, MM, DD.
+      [DRIP_PROPS.TEMP_TIME]: getMilitaryTime(entry['tempOne']) || null,
+      [DRIP_PROPS.TEMP_VAL]: entry['tempOneValue'] || null,
+      [DRIP_PROPS.TEMP_EXCLUDE]: false,
+      [DRIP_PROPS.BLEEDING_VAL]: getBleedingValue(entry['fluid']) ?? null,
+      [DRIP_PROPS.BLEEDING_EXCLUDE]: getBleedingValue(entry['fluid']) != null ? false : null, // Bleeding value/exclude must always be together AND valid
+      [DRIP_PROPS.VAG_FEELING]: VAG_SENS_MAP[entry['sensation']] ?? 1, // Default to 1 (nothing)
+      [DRIP_PROPS.C_MUCUS_TEXTURE]: getCervicalFluidValue(entry['fluid']) ?? null,
+      [DRIP_PROPS.C_MUCUS_EXCLUDE]: false,
+      [DRIP_PROPS.C_OPENING]: C_OPENING_MAP[entry['cervixOpenness']] ?? null,
+      [DRIP_PROPS.C_FIRMNESS]: C_FIRMNESS_MAP[entry['cervixFirmness']] ?? null,
+      [DRIP_PROPS.C_POS]: C_POS_MAP[entry['cervixHeight']] ?? null,
+      [DRIP_PROPS.C_EXCLUDE]: false,
+      [DRIP_PROPS.SEX_SOLO]: null,
+      [DRIP_PROPS.SEX_PARTNER]: null,
+      [DRIP_PROPS.CONTRA_CONDOM]: null,
+      [DRIP_PROPS.CONTRA_PILL]: null,
+      [DRIP_PROPS.CONTRA_IUD]: null,
+      [DRIP_PROPS.CONTRA_PATCH]: null,
+      [DRIP_PROPS.CONTRA_RING]: null,
+      [DRIP_PROPS.CONTRA_IMPLANT]: null,
+      [DRIP_PROPS.CONTRA_DIAPHRAGM]: null,
+      [DRIP_PROPS.CONTRA_NONE]: null,
+      [DRIP_PROPS.CONTRA_OTHER]: null,
+      [DRIP_PROPS.SEX_NOTE]: null,
     }
 
     // Set sex type (solo/partner)

@@ -1,3 +1,5 @@
+import { DRIP_PROPS } from "../constants.js";
+
 export function mapPremom(jsonData) {
   return jsonData.data.map(entry => {
     // If no date prop OR invalid date
@@ -5,10 +7,10 @@ export function mapPremom(jsonData) {
 
     const [time, timeIndicator] = getTimeAndIndicator(entry['Time(BBT)']) || [null, null];
     return {
-      ['date']: new Date(entry['Date']).toISOString(),
-      ['temperature.time']: convertToMilitaryTime(time, timeIndicator) || null,
-      ['temperature.value']: formatTemperature(entry['Temperature']) || null,
-      ['temperature.exclude']: false,
+      [DRIP_PROPS.DATE]: new Date(entry['Date']).toISOString(),
+      [DRIP_PROPS.TEMP_TIME]: convertToMilitaryTime(time, timeIndicator) || null,
+      [DRIP_PROPS.TEMP_VAL]: formatTemperature(entry['Temperature']) || null,
+      [DRIP_PROPS.TEMP_EXCLUDE]: false,
     }
   }).filter(entry => entry !== null); // Exclude any null (dateless) entries
 }

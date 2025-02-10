@@ -58,6 +58,22 @@ const C_MUCUS_MAP = {
   'peak': 2,
 }
 
+const RYB_PROPS = {
+  DATE: 'date',
+  TEMP_VAL: 'tempOneValue',
+  TEMP_TIME: 'tempOne',
+  BLEEDING_VAL: 'fluid',
+  VAG_SENS: 'sensation',
+  C_MUCUS_TEXTURE: 'fluid',
+  C_OPENING: 'cervixOpenness',
+  C_FIRMNESS: 'cervixFirmness',
+  C_POS: 'cervixHeight',
+  C_TILT: 'cervixTilt',
+  INTERCOURSE: 'intercourse',
+  CONTRA: 'intercourse',
+  NOTE: 'notes',
+}
+
 export function mapRYB(jsonData) {
   return jsonData.data.map(entry => {
     // If no date prop OR invalid date
@@ -66,18 +82,18 @@ export function mapRYB(jsonData) {
     let notes = "";
 
     const dripEntry = {
-      [DRIP_PROPS.DATE]: new Date(entry['date']).toISOString().split('T')[0], // RYB doesn't localize date so just split the YYYY, MM, DD.
-      [DRIP_PROPS.TEMP_TIME]: getMilitaryTime(entry['tempOne']) || null,
-      [DRIP_PROPS.TEMP_VAL]: entry['tempOneValue'] || null,
+      [DRIP_PROPS.DATE]: new Date(entry[RYB_PROPS.DATE]).toISOString().split('T')[0], // RYB doesn't localize date so just split the YYYY, MM, DD.
+      [DRIP_PROPS.TEMP_TIME]: getMilitaryTime(entry[RYB_PROPS.TEMP_TIME]) || null,
+      [DRIP_PROPS.TEMP_VAL]: entry[RYB_PROPS.TEMP_VAL] || null,
       [DRIP_PROPS.TEMP_EXCLUDE]: false,
-      [DRIP_PROPS.BLEEDING_VAL]: getBleedingValue(entry['fluid']) ?? null,
-      [DRIP_PROPS.BLEEDING_EXCLUDE]: getBleedingValue(entry['fluid']) != null ? false : null, // Bleeding value/exclude must always be together AND valid
-      [DRIP_PROPS.VAG_FEELING]: VAG_SENS_MAP[entry['sensation']] ?? 1, // Default to 1 (nothing)
-      [DRIP_PROPS.C_MUCUS_TEXTURE]: getCervicalFluidValue(entry['fluid']) ?? null,
+      [DRIP_PROPS.BLEEDING_VAL]: getBleedingValue(entry[RYB_PROPS.BLEEDING_VAL]) ?? null,
+      [DRIP_PROPS.BLEEDING_EXCLUDE]: getBleedingValue(entry[RYB_PROPS.BLEEDING_VAL]) != null ? false : null, // Bleeding value/exclude must always be together AND valid
+      [DRIP_PROPS.VAG_FEELING]: VAG_SENS_MAP[entry[RYB_PROPS.VAG_SENS]] ?? 1, // Default to 1 (nothing)
+      [DRIP_PROPS.C_MUCUS_TEXTURE]: getCervicalFluidValue(entry[RYB_PROPS.C_MUCUS_TEXTURE]) ?? null,
       [DRIP_PROPS.C_MUCUS_EXCLUDE]: false,
-      [DRIP_PROPS.C_OPENING]: C_OPENING_MAP[entry['cervixOpenness']] ?? null,
-      [DRIP_PROPS.C_FIRMNESS]: C_FIRMNESS_MAP[entry['cervixFirmness']] ?? null,
-      [DRIP_PROPS.C_POS]: C_POS_MAP[entry['cervixHeight']] ?? null,
+      [DRIP_PROPS.C_OPENING]: C_OPENING_MAP[entry[RYB_PROPS.C_OPENING]] ?? null,
+      [DRIP_PROPS.C_FIRMNESS]: C_FIRMNESS_MAP[entry[RYB_PROPS.C_FIRMNESS]] ?? null,
+      [DRIP_PROPS.C_POS]: C_POS_MAP[entry[RYB_PROPS.C_POS]] ?? null,
       [DRIP_PROPS.C_EXCLUDE]: false,
       [DRIP_PROPS.SEX_SOLO]: null,
       [DRIP_PROPS.SEX_PARTNER]: null,
@@ -94,18 +110,18 @@ export function mapRYB(jsonData) {
     }
 
     // Set sex type (solo/partner)
-    const sexType = getSexType(entry["intercourse"]);
+    const sexType = getSexType(entry[RYB_PROPS.INTERCOURSE]);
     if (sexType) {
       dripEntry[`sex.${ sexType }`] = true;
     }
 
     // Set various contraceptive types
-    const contraceptiveTypes = getContraceptiveTypes(entry["intercourse"]);
+    const contraceptiveTypes = getContraceptiveTypes(entry[RYB_PROPS.CONTRA]);
     if (contraceptiveTypes) {
       contraceptiveTypes.forEach(item => {
         if (item.asNote) {
-          dripEntry['sex.other'] = true;
-          dripEntry['sex.note'] = `Sex: ${ item.name }`; // Add unsupported types as a note
+          dripEntry[DRIP_PROPS.CONTRA_OTHER] = true;
+          dripEntry[DRIP_PROPS.SEX_NOTE] = `Sex: ${ item.name }`; // Add unsupported types as a note
         } else if (item.name) {
           dripEntry[`sex.${ item.name }`] = true;
         }
@@ -113,18 +129,18 @@ export function mapRYB(jsonData) {
     }
 
     // Add unsupported values as notes
-    if (entry['cervixFirmness'] === 'medium') {
-      notes += `Cervix Firmness: ${ entry['cervixFirmness'] }\n`;
+    if (entry[RYB_PROPS.C_FIRMNESS] === 'medium') {
+      notes += `Cervix Firmness: ${ entry[RYB_PROPS.C_FIRMNESS] }\n`;
     }
-    if (entry['cervixTilt']) {
-      notes += `Cervix Tilt: ${ entry['cervixTilt'] }\n`;
+    if (entry[RYB_PROPS.C_TILT]) {
+      notes += `Cervix Tilt: ${ entry[RYB_PROPS.C_TILT] }\n`;
     }
 
     // Add any existing notes
-    if (entry['notes']) {
-      notes += `${ entry['note'] }`;
+    if (entry[RYB_PROPS.NOTE]) {
+      notes += `${ entry[RYB_PROPS.NOTE] }`;
     }
-    dripEntry['note.value'] = notes;
+    dripEntry[DRIP_PROPS.NOTE] = notes;
 
     return dripEntry;
   }).filter(entry => entry !== null); // Exclude any null (dateless) entries

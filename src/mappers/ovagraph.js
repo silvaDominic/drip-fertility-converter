@@ -70,7 +70,7 @@ export function mapOvagraph(jsonData) {
       [DRIP_PROPS.C_POS]: C_POS_MAP[entry[OVA_PROPS.C_POS]] ?? null,
       [DRIP_PROPS.SEX_PARTNER]: entry[OVA_PROPS.INTERCOURSE] ?? null,
       [DRIP_PROPS.PAIN_OVU]: entry[OVA_PROPS.OVU_PAIN] ?? null,
-      [DRIP_PROPS.EXCLUDE]: !!Number(entry[OVA_PROPS.EXCLUDE]) ?? false, // value is 0 or 1
+      [DRIP_PROPS.TEMP_EXCLUDE]: !!Number(entry[OVA_PROPS.EXCLUDE]) ?? false, // value is 0 or 1
       [DRIP_PROPS.NOTE]: entry[OVA_PROPS.NOTE] ?? "",
     }
 

@@ -27,7 +27,7 @@ const PROPS = {
   SEX_NOTE: 'sex.note',
   PAIN_OVU: 'pain.ovulationPain',
   EXCLUDE: 'temperature.exclude',
-  NOTE: 'note',
+  NOTE: 'note.value',
 }
 
 const OVA_PROPS = {
@@ -89,8 +89,9 @@ export function mapOvagraph(jsonData) {
     const dripEntry = {
       [PROPS.DATE]: new Date(entry[OVA_PROPS.DATE]).toISOString().split('T')[0],
       [PROPS.TEMP_TIME]: entry[OVA_PROPS.TEMP_TIME] ?? null,
-      [PROPS.TEMP_VAL]: fahrenheitToCelsius(entry[OVA_PROPS.TEMP_VAL]) ?? null,
+      [PROPS.TEMP_VAL]: getTemperature(entry[OVA_PROPS.TEMP_VAL]) ?? null,
       [PROPS.BLEEDING_VAL]: entry[OVA_PROPS.BLEEDING_VAL] ?? null,
+      [PROPS.BLEEDING_EXCLUDE]: entry[OVA_PROPS.BLEEDING_VAL] != null ? false : null, // Bleeding value/exclude must always be together AND valid,
       [PROPS.C_MUCUS_TEXTURE]: C_MUCUS_TEXTURE_MAP[entry[OVA_PROPS.C_MUCUS]] ?? null,
       [PROPS.C_OPENING]: C_OPENING_MAP[entry[OVA_PROPS.C_OPENING]] ?? null,
       [PROPS.C_FIRMNESS]: C_FIRMNESS_MAP[entry[OVA_PROPS.C_FIRMNESS]] ?? null,
@@ -98,8 +99,8 @@ export function mapOvagraph(jsonData) {
       [PROPS.C_POS]: C_POS_MAP[entry[OVA_PROPS.C_POS]] ?? null,
       [PROPS.SEX_PARTNER]: entry[OVA_PROPS.INTERCOURSE] ?? null,
       [PROPS.PAIN_OVU]: entry[OVA_PROPS.OVU_PAIN] ?? null,
-      [PROPS.EXCLUDE]: !!Number(entry[OVA_PROPS.EXCLUDE]) ?? null, // value is 0 or 1
-      [PROPS.NOTE]: entry[OVA_PROPS.NOTE],
+      [PROPS.EXCLUDE]: !!Number(entry[OVA_PROPS.EXCLUDE]) ?? false, // value is 0 or 1
+      [PROPS.NOTE]: entry[OVA_PROPS.NOTE] ?? "",
     }
 
     if (entry[OVA_PROPS.VAG_SEN] === 'sticky') {
@@ -111,7 +112,17 @@ export function mapOvagraph(jsonData) {
     }
 
     dripEntry[PROPS.NOTE] += notes;
-    return dripEntry;
 
+    return dripEntry;
   }).filter(entry => entry !== null); // Exclude any null (dateless) entries
+}
+
+export function getTemperature(val) {
+  if (typeof val !== 'string' && typeof val !== 'number') return null;
+
+  const tempVal = Number(val);
+  if (tempVal > 40) {
+    return fahrenheitToCelsius(tempVal);
+  }
+  return tempVal;
 }

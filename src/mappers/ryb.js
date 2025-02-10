@@ -4,7 +4,7 @@ https://readyourbody.com/
 */
 
 const UNSUPPORTED = 'unsupported';
-const CONTRACEPTIVES_MAP = {
+const CONTRA_MAP = {
   "solo": "solo",
   "unprotected": "none",
   "condom": "condom",
@@ -19,39 +19,39 @@ const CONTRACEPTIVES_MAP = {
 }
 
 
-const BLEEDING_MAP = {
+const BLEEDING_VAL_MAP = {
   'spotting': 0,
   'bleeding_light': 1,
   'bleeding': 2,
   'bleeding_heavy': 3,
 }
 
-const CERVIX_FIRMNESS_MAP = {
+const C_FIRMNESS_MAP = {
   'firm': 0,
   'medium': null,
   'soft': 1,
 }
 
-const CERVIX_POSITION_MAP = {
+const C_POS_MAP = {
   'low': 0,
   'medium': 1,
   'high': 2,
 }
 
-const CERVIX_OPENING_MAP = {
+const C_OPENING_MAP = {
   'closed': 0,
   'medium': 1,
   'open': 2,
 }
 
-const VAGINAL_SENSATION_MAP = {
+const VAG_SENS_MAP = {
   'low': 0,
   'medium': 2,
   'high': 3,
 }
 
 // peak,non_peak,spotting,bleeding_light,dry
-const CERVIX_MUCUS_MAP = {
+const C_MUCUS_MAP = {
   'dry': 0,
   'non_peak': 1,
   'peak': 2,
@@ -71,13 +71,13 @@ export function mapRYB(jsonData) {
       ['temperature.exclude']: false,
       ['bleeding.value']: getBleedingValue(entry['fluid']) ?? null,
       ['bleeding.exclude']: getBleedingValue(entry['fluid']) != null ? false : null, // Bleeding value/exclude must always be together AND valid
-      ['mucus.feeling']: VAGINAL_SENSATION_MAP[entry['sensation']] ?? 1, // Default to 1 (nothing)
+      ['mucus.feeling']: VAG_SENS_MAP[entry['sensation']] ?? 1, // Default to 1 (nothing)
       ['mucus.texture']: getCervicalFluidValue(entry['fluid']) ?? null,
       ['mucus.value']: null, // Computed value
       ['mucus.exclude']: false,
-      ['cervix.opening']: CERVIX_OPENING_MAP[entry['cervixOpenness']] ?? null,
-      ['cervix.firmness']: CERVIX_FIRMNESS_MAP[entry['cervixFirmness']] ?? null,
-      ['cervix.position']: CERVIX_POSITION_MAP[entry['cervixHeight']] ?? null,
+      ['cervix.opening']: C_OPENING_MAP[entry['cervixOpenness']] ?? null,
+      ['cervix.firmness']: C_FIRMNESS_MAP[entry['cervixFirmness']] ?? null,
+      ['cervix.position']: C_POS_MAP[entry['cervixHeight']] ?? null,
       ['cervix.exclude']: false,
       ['sex.solo']: null,
       ['sex.partner']: null,
@@ -135,11 +135,11 @@ export function getBleedingValue(valuesStr) {
 
   const values = valuesStr.split(',')
     .map(value => value.trim())
-    .filter((value => Object.keys(BLEEDING_MAP).includes(value)));
+    .filter((value => Object.keys(BLEEDING_VAL_MAP).includes(value)));
   // Sort bleeding items based on the defined priority
-  const sortedItems = values.sort((a, b) => (BLEEDING_MAP[b] - BLEEDING_MAP[a]));
+  const sortedItems = values.sort((a, b) => (BLEEDING_VAL_MAP[b] - BLEEDING_VAL_MAP[a]));
   // Return the highest-priority item (first in the sorted list)
-  return BLEEDING_MAP[sortedItems[0]];  // Return null if no items found
+  return BLEEDING_VAL_MAP[sortedItems[0]];  // Return null if no items found
 }
 
 export function getCervicalFluidValue(valuesStr) {
@@ -148,11 +148,11 @@ export function getCervicalFluidValue(valuesStr) {
   const fluidTypes = valuesStr
     .split(',')
     .map(type => type.trim())
-    .filter((type => Object.keys(CERVIX_MUCUS_MAP).includes(type)));
+    .filter((type => Object.keys(C_MUCUS_MAP).includes(type)));
   // Sort mucus items based on the defined priority
-  const sortedItems = fluidTypes.sort((a, b) => (CERVIX_MUCUS_MAP[b] - CERVIX_MUCUS_MAP[a]));
+  const sortedItems = fluidTypes.sort((a, b) => (C_MUCUS_MAP[b] - C_MUCUS_MAP[a]));
   // Return the highest-priority item (first in the sorted list)
-  return CERVIX_MUCUS_MAP[sortedItems[0]]; // Return null if no items found
+  return C_MUCUS_MAP[sortedItems[0]]; // Return null if no items found
 }
 
 export function getSexType(valuesStr) {
@@ -163,7 +163,7 @@ export function getSexType(valuesStr) {
     .map(token => token.trim());
 
   // If solo is found at all, assume 'solo' sex.
-  if (contraceptiveType.includes(CONTRACEPTIVES_MAP["solo"])) return "solo";
+  if (contraceptiveType.includes(CONTRA_MAP["solo"])) return "solo";
   // RYB doesn't have a 'partner' term and so any sex method that isn't 'solo' is assumed as such.
   for (const type of contraceptiveType) {
     if (contraceptiveType.includes(type)) return "partner";
@@ -180,10 +180,10 @@ export function getContraceptiveTypes(valuesStr) {
 
   // Marks unsupported types to be a note and uses RYB name, otherwise maps to associated Drip name
   return validTypes.map((type) => {
-    if (CONTRACEPTIVES_MAP[type] === UNSUPPORTED) {
+    if (CONTRA_MAP[type] === UNSUPPORTED) {
       return { name: type, asNote: true }
     } else {
-      return { name: CONTRACEPTIVES_MAP[type], asNote: false }
+      return { name: CONTRA_MAP[type], asNote: false }
     }
   });
 }

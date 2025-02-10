@@ -1,34 +1,5 @@
 import { fahrenheitToCelsius } from "../utils.js";
-
-const PROPS = {
-  DATE: 'date',
-  TEMP_TIME: 'temperature.time',
-  TEMP_VAL: 'temperature.value',
-  BLEEDING_VAL: 'bleeding.value',
-  BLEEDING_EXCLUDE: 'bleeding.exclude',
-  C_MUCUS_TEXTURE: 'mucus.texture',
-  VAG_FEELING: 'mucus.feeling',
-  C_MUCUS_EXCLUDE: 'mucus.exclude',
-  C_OPENING: 'cervix.opening',
-  C_FIRMNESS: 'cervix.firmness',
-  C_POS: 'cervix.position',
-  C_EXCLUDE: 'cervix.exclude',
-  SEX_SOLO: 'sex.solo',
-  SEX_PARTNER: 'sex.partner',
-  CONTRA_CONDOM: 'sex.condom',
-  CONTRA_PILL: 'sex.pill',
-  CONTRA_IUD: 'sex.iud',
-  CONTRA_PATCH: 'sex.patch',
-  CONTRA_RING: 'sex.ring',
-  CONTRA_IMPLANT: 'sex.implant',
-  CONTRA_DIAPHRAGM: 'sex.diaphragm',
-  CONTRA_NONE: 'sex.none',
-  CONTRA_OTHER: 'sex.other',
-  SEX_NOTE: 'sex.note',
-  PAIN_OVU: 'pain.ovulationPain',
-  EXCLUDE: 'temperature.exclude',
-  NOTE: 'note.value',
-}
+import { DRIP_PROPS } from "../constants.js";
 
 const OVA_PROPS = {
   DATE: 'd',
@@ -87,20 +58,20 @@ export function mapOvagraph(jsonData) {
     let notes = "";
 
     const dripEntry = {
-      [PROPS.DATE]: new Date(entry[OVA_PROPS.DATE]).toISOString().split('T')[0],
-      [PROPS.TEMP_TIME]: entry[OVA_PROPS.TEMP_TIME] ?? null,
-      [PROPS.TEMP_VAL]: getTemperature(entry[OVA_PROPS.TEMP_VAL]) ?? null,
-      [PROPS.BLEEDING_VAL]: entry[OVA_PROPS.BLEEDING_VAL] ?? null,
-      [PROPS.BLEEDING_EXCLUDE]: entry[OVA_PROPS.BLEEDING_VAL] != null ? false : null, // Bleeding value/exclude must always be together AND valid,
-      [PROPS.C_MUCUS_TEXTURE]: C_MUCUS_TEXTURE_MAP[entry[OVA_PROPS.C_MUCUS]] ?? null,
-      [PROPS.C_OPENING]: C_OPENING_MAP[entry[OVA_PROPS.C_OPENING]] ?? null,
-      [PROPS.C_FIRMNESS]: C_FIRMNESS_MAP[entry[OVA_PROPS.C_FIRMNESS]] ?? null,
-      [PROPS.VAG_FEELING]: VAG_SENS_MAP[entry[OVA_PROPS.VAG_SEN]] ?? null,
-      [PROPS.C_POS]: C_POS_MAP[entry[OVA_PROPS.C_POS]] ?? null,
-      [PROPS.SEX_PARTNER]: entry[OVA_PROPS.INTERCOURSE] ?? null,
-      [PROPS.PAIN_OVU]: entry[OVA_PROPS.OVU_PAIN] ?? null,
-      [PROPS.EXCLUDE]: !!Number(entry[OVA_PROPS.EXCLUDE]) ?? false, // value is 0 or 1
-      [PROPS.NOTE]: entry[OVA_PROPS.NOTE] ?? "",
+      [DRIP_PROPS.DATE]: new Date(entry[OVA_PROPS.DATE]).toISOString().split('T')[0],
+      [DRIP_PROPS.TEMP_TIME]: entry[OVA_PROPS.TEMP_TIME] ?? null,
+      [DRIP_PROPS.TEMP_VAL]: getTemperature(entry[OVA_PROPS.TEMP_VAL]) ?? null,
+      [DRIP_PROPS.BLEEDING_VAL]: entry[OVA_PROPS.BLEEDING_VAL] ?? null,
+      [DRIP_PROPS.BLEEDING_EXCLUDE]: entry[OVA_PROPS.BLEEDING_VAL] != null ? false : null, // Bleeding value/exclude must always be together AND valid,
+      [DRIP_PROPS.C_MUCUS_TEXTURE]: C_MUCUS_TEXTURE_MAP[entry[OVA_PROPS.C_MUCUS]] ?? null,
+      [DRIP_PROPS.C_OPENING]: C_OPENING_MAP[entry[OVA_PROPS.C_OPENING]] ?? null,
+      [DRIP_PROPS.C_FIRMNESS]: C_FIRMNESS_MAP[entry[OVA_PROPS.C_FIRMNESS]] ?? null,
+      [DRIP_PROPS.VAG_FEELING]: VAG_SENS_MAP[entry[OVA_PROPS.VAG_SEN]] ?? null,
+      [DRIP_PROPS.C_POS]: C_POS_MAP[entry[OVA_PROPS.C_POS]] ?? null,
+      [DRIP_PROPS.SEX_PARTNER]: entry[OVA_PROPS.INTERCOURSE] ?? null,
+      [DRIP_PROPS.PAIN_OVU]: entry[OVA_PROPS.OVU_PAIN] ?? null,
+      [DRIP_PROPS.EXCLUDE]: !!Number(entry[OVA_PROPS.EXCLUDE]) ?? false, // value is 0 or 1
+      [DRIP_PROPS.NOTE]: entry[OVA_PROPS.NOTE] ?? "",
     }
 
     if (entry[OVA_PROPS.VAG_SEN] === 'sticky') {
@@ -111,7 +82,7 @@ export function mapOvagraph(jsonData) {
       notes += `Cervical Mucus: ${entry[OVA_PROPS.C_MUCUS]}\n`;
     }
 
-    dripEntry[PROPS.NOTE] += notes;
+    dripEntry[DRIP_PROPS.NOTE] += notes;
 
     return dripEntry;
   }).filter(entry => entry !== null); // Exclude any null (dateless) entries

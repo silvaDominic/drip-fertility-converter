@@ -3,9 +3,8 @@ Mapper for Read Your Body app
 https://readyourbody.com/
 */
 
-import { DRIP_PROPS } from "../constants.js";
+import { DRIP_PROPS, UNSUPPORTED } from "../constants.js";
 
-const UNSUPPORTED = 'unsupported';
 const CONTRA_MAP = {
   "solo": "solo",
   "unprotected": "none",

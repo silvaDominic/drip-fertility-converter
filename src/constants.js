@@ -27,3 +27,5 @@ export const DRIP_PROPS = {
   PAIN_OVU: 'pain.ovulationPain',
   NOTE: 'note.value',
 }
+
+export const UNSUPPORTED = 'unsupported';

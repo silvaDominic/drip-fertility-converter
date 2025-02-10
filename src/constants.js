@@ -2,6 +2,7 @@ export const DRIP_PROPS = {
   DATE: 'date',
   TEMP_TIME: 'temperature.time',
   TEMP_VAL: 'temperature.value',
+  TEMP_EXCLUDE: 'temperature.exclude',
   BLEEDING_VAL: 'bleeding.value',
   BLEEDING_EXCLUDE: 'bleeding.exclude',
   C_MUCUS_TEXTURE: 'mucus.texture',
@@ -24,6 +25,5 @@ export const DRIP_PROPS = {
   CONTRA_OTHER: 'sex.other',
   SEX_NOTE: 'sex.note',
   PAIN_OVU: 'pain.ovulationPain',
-  EXCLUDE: 'temperature.exclude',
   NOTE: 'note.value',
 }

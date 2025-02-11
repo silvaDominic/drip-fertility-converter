@@ -1,3 +1,4 @@
+// DEV_NOTE: Use this constant to refer to drip. properties.
 export const DRIP_PROPS = {
   DATE: 'date',
   TEMP_TIME: 'temperature.time',

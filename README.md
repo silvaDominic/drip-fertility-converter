@@ -6,6 +6,25 @@ An open-source web tool for converting formatted fertility data of common fertil
 - Read Your Body
 - Ovagraph
 
+## Running the Project
+This project is a simple static web tool built with npm, vite, and AlpineJS.
+
+First install dependencies with:
+
+`npm install`
+
+Then run:
+
+`npm run dev`
+
+To run tests:
+
+`npm run test`
+
+To build run:
+
+`npm run build`
+
 ## Contributing
 
 There are lots of fertility apps out there and unfortunately I can't do them all. If you don't see one you use or want supported 

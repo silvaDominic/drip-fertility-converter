@@ -4,7 +4,7 @@
 
 import { DRIP_PROPS } from "../constants.js";
 
-export function mapAPP_TYPE(jsonData) {
+export function mapAPP_NANE(jsonData) {
   return jsonData.data.map(entry => {
     // If no date prop OR invalid date
     if (!entry?.date?.trim()) return null;

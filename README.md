@@ -19,10 +19,10 @@ feel free to contribute.
 
 ### What to Contribute
 - Create a file under the `mappers` directory named after the app you're adding support for
-- Add your app name to the `APP_TYPE` constant in `index.js`
+- Add your app name to the `APP_NAME` constant in `index.js`
 - If an export resource exists to your app, add it to the `HELP_LINK_MAP` in `index.js`. Otherwise, omit it.
-- Add a switch case for the new `APP_TYPE` you've created under `mapToDripFormat` function in `index.js` and have it return the value of your mapper
-- Add the `APP_TYPE` value as an `<option>` under the `<select>` element in `index.html`
+- Add a switch case for the new `APP_NAME` you've created under `mapToDripFormat` function in `index.js` and have it return the value of your mapper
+- Add the `APP_NAME` value as an `<option>` under the `<select>` element in `index.html`
 - Add tests under the `tests` directory
 - Add any generic functionality/variables to the utils/constants files.
 

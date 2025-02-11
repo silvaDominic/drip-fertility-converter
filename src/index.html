@@ -13,7 +13,7 @@
     </head>
 
     <body>
-        <div id="main-container" x-data="main">
+        <main id="main-container" x-data="main">
             <div>
                 <div class="title-wrapper">
                     <select
@@ -34,17 +34,16 @@
                 <h2 class="sub-title">Upload an exported data file from your current app to download a CSV file compatible with <span class="drip-text">drip.</span></h2>
             </div>
 
-            <div id="how-to-wrapper" x-show="showHelpBlock">
+            <div id="export-help-wrapper" x-show="showHelpBlock">
                 <a
-                    id="how-to-link"
                     :href="helpLink"
                     target="_blank"
                     x-show="showHelpLink">
-                    How to export data with <span class="selected-app-text" x-text="selectedAppText"></span>
+                    How to export data with <span class="selected-app-text" x-text="selectedAppLabel"></span>
                 </a>
-                <div id="how-to-disclaimer" x-show="!showHelpLink">
-                    <span class="selected-app-text" x-text="selectedAppText"></span> doesn't provide instructions to export. Explore your settings around data or reach out to support.
-                </div>
+                <p id="export-help-message" x-show="!showHelpLink">
+                    <span class="selected-app-text" x-text="selectedAppLabel"></span> doesn't provide instructions to export. Explore your settings around data or reach out to support.
+                </p>
             </div>
 
             <div id="file-upload-container" :class="disableFileInput ? 'disabled' : ''">
@@ -68,6 +67,6 @@
                 Convert Data
             </button>
             <a id="download-link">Download Data</a>
-        </div>
+        </main>
     </body>
 </html>

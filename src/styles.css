@@ -86,11 +86,11 @@ select {
     margin-bottom: 4rem;
 }
 
-#how-to-wrapper {
+#export-help-wrapper {
     margin: 1rem 0;
 }
 
-#how-to-disclaimer {
+#export-help-wrapper p {
     color: var(--red);
 }
 

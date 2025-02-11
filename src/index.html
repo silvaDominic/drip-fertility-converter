@@ -3,6 +3,9 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <style>
+            [x-cloak] { display: none !important; }
+        </style>
         <link href="./styles.css" rel="stylesheet"/>
         <script src="./index.js" type="module" defer></script>
         <link
@@ -34,7 +37,7 @@
                 <h2 class="sub-title">Upload an exported data file from your current app to download a CSV file compatible with <span class="drip-text">drip.</span></h2>
             </div>
 
-            <div id="export-help-wrapper" x-show="showHelpBlock">
+            <div id="export-help-wrapper" x-cloak x-show="showHelpBlock">
                 <a
                     :href="helpLink"
                     target="_blank"
@@ -61,6 +64,7 @@
 
             <button
                 id="convert-button"
+                x-cloak
                 x-show="showConvertButton"
                 @click="onConvert"
             >

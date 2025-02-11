@@ -35,7 +35,10 @@ Alpine.data('main', () => ({
       this.fileInput = null;
     }
   },
-  onSelectChange(e) { this.selectedAppLabel = e.target.selectedOptions[0].innerText; },
+  onSelectChange(e) {
+    this.fileInput = null;
+    this.selectedAppLabel = e.target.selectedOptions[0].innerText;
+  },
   onConvert() { onConvertData(this.selectedApp) },
 }));
 
@@ -99,5 +102,5 @@ function prepareDownload(csvData, appName) {
   const downloadLink = document.getElementById('download-link');
   downloadLink.href = url;
   downloadLink.download = `${appName}-to-drip.csv`;
-  downloadLink.style.display = 'inline';
+  downloadLink.style.display = 'block';
 }

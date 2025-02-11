@@ -1,5 +1,5 @@
 import { mapRYB } from "./mappers/ryb.js";
-import { convertCVStoJSON, convertJSONtoCSV } from "./utils.js";
+import { convertCVStoJSON, convertJSONtoCSV, parseJSON } from "./utils.js";
 import { mapPremom } from "./mappers/premom.js";
 import { mapOvagraph } from "./mappers/ovagraph.js";
 import Alpine from 'alpinejs';
@@ -58,7 +58,7 @@ function onConvertData(appName) {
   const file = fileInput.files[0];
 
   if (!file) {
-    alert('Please select file first.');
+    alert('Please select a file first.');
     return;
   }
 
@@ -67,30 +67,27 @@ function onConvertData(appName) {
   const reader = new FileReader();
   reader.onload = function(e) {
     const fileContent = e.target.result;
-    let csvData = null;
+    let mappedData = null;
+    let parsedJSON = null;
+    let csvData;
 
     switch (fileExtension) {
       case 'json':
-        try {
-          const parsedJSON = JSON.parse(fileContent);
-          csvData = convertJSONtoCSV(parsedJSON);
-        } catch(err) {
-          alert('Error parsing JSON data.');
-          console.error(err);
-        }
-      break;
+        parsedJSON = parseJSON(fileContent);
+        break;
       case 'csv':
-        try {
-          const parsedJSON = convertCVStoJSON(fileContent);
-          const mappedData = mapToDripFormat(appName, parsedJSON);
-          console.log(mappedData)
-          csvData = convertJSONtoCSV(mappedData);
-        } catch(err) {
-          alert('Error parsing CSV data.');
-          console.error(err);
-        }
+        parsedJSON = convertCVStoJSON(fileContent);
         break;
     }
+
+    try {
+      mappedData = mapToDripFormat(appName, parsedJSON);
+    } catch(err) {
+      alert(`Error mapping ${appName}`);
+      console.error(err);
+    }
+
+    csvData = convertJSONtoCSV(mappedData);
     prepareDownload(csvData, appName);
   };
   reader.readAsText(file);

@@ -1,11 +1,29 @@
 import Papa from 'papaparse';
 
 export function convertJSONtoCSV(jsonData) {
-  return Papa.unparse(jsonData, { delimiter: ',' });
+  try {
+    return Papa.unparse(jsonData, { delimiter: ',' });
+  } catch(err) {
+    alert('Error converting JSON data to CSV.');
+    console.error(err);
+  }
 }
 
 export function convertCVStoJSON(csvData) {
-  return Papa.parse(csvData, {header: true, delimiter: ',', skipEmptyLines: true});
+  try {
+    return Papa.parse(csvData, {header: true, delimiter: ',', skipEmptyLines: true});
+  } catch(err) {
+    alert('Error converting CSV data to JSON.');
+    console.error(err);
+  }
+}
+
+export function parseJSON(jsonData) {
+  try {
+    return JSON.parse(jsonData);
+  } catch (err) {
+    alert('Error parsing JSON data.')
+  }
 }
 
 export function fahrenheitToCelsius(temp) {

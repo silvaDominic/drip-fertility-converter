@@ -14,7 +14,7 @@ const APP_NAME = {
 // DEV_NOTE: ADD EXPORT DATA LINK HERE
 const HELP_LINK_MAP = {
   [APP_NAME.RYB]: 'https://readyourbody.zendesk.com/hc/en-gb/articles/360015907180-Manual-backup-RYB-JSON-CSV-ZIP',
-  //[APP_NAME.PREMOM]: 'https://support.premom.com/hc/en-us/articles/4416350070035-Q6-How-do-I-export-BBT-and-share-via-Email',
+  [APP_NAME.PREMOM]: 'https://support.premom.com/hc/en-us/articles/4416350070035-Q6-How-do-I-export-BBT-and-share-via-Email',
   [APP_NAME.OVA_GRAPH]: 'https://www.ovagraph.com/faq/can-i-export-my-data-ovagraphcom',
 }
 
@@ -40,10 +40,6 @@ Alpine.data('main', () => ({
 }));
 
 Alpine.start();
-
-document.addEventListener('DOMContentLoaded', () => {
-
-});
 
 // DEV_NOTE: ADD ASSOCIATED MAPPING FUNCTIONS HERE
 function mapToDripFormat(appType, jsonData) {
@@ -95,10 +91,8 @@ function onConvertData(appName) {
         }
         break;
     }
-
     prepareDownload(csvData, appName);
   };
-
   reader.readAsText(file);
 }
 

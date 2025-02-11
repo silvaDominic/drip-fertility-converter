@@ -2,6 +2,7 @@ import { mapRYB } from "./mappers/ryb.js";
 import { convertCVStoJSON, convertJSONtoCSV } from "./utils.js";
 import { mapPremom } from "./mappers/premom.js";
 import { mapOvagraph } from "./mappers/ovagraph.js";
+import Alpine from 'alpinejs';
 
 // DEV_NOTE: ADD APP TYPE HERE
 const APP_TYPE = {
@@ -17,99 +18,31 @@ const HELP_LINK_MAP = {
   [APP_TYPE.OVA_GRAPH]: 'https://www.ovagraph.com/faq/can-i-export-my-data-ovagraphcom',
 }
 
-let selectedApp = null;
+Alpine.data('main', () => ({
+  selectedApp: "DEFAULT",
+  selectedAppText: "",
+  fileInput: null,
+  get helpLink() { return HELP_LINK_MAP[this.selectedApp] },
+  get disableFileInput() { return this.selectedApp === 'DEFAULT' },
+  get showHelpBlock() { return this.selectedApp !== 'DEFAULT' },
+  get showHelpLink() { return !!APP_TYPE[this.selectedApp] && HELP_LINK_MAP[this.selectedApp] },
+  get showConvertButton() { return this.fileInput?.files?.length > 0 },
+  onFileInputChange(event) {
+    const fileInputElem = event.target;
+    if (fileInputElem.files && fileInputElem.files[0]) {
+      this.fileInput = fileInputElem;
+    } else {
+      this.fileInput = null;
+    }
+  },
+  onSelectChange(e) { this.selectedAppText = e.target.selectedOptions[0].innerText; },
+  onConvert() { onConvertData(this.selectedApp) },
+}));
+
+Alpine.start();
 
 document.addEventListener('DOMContentLoaded', () => {
-  const convertBtn = document.getElementById('convert-button');
-  const fileInput = document.getElementById('file-input');
-  const fileUploadContainerEl = document.getElementById('file-upload-container');
-  const appTypeSelectEl = document.getElementById('app-type-select');
-  const selectedAppEl = document.getElementsByClassName('selected-app-text');
-  const howToLinkEl = document.getElementById('how-to-link');
-  const howToDisclaimerEl = document.getElementById('how-to-disclaimer');
 
-  // 'CONVERT' BUTTON
-  convertBtn.addEventListener('click', () => {
-    onConvertData(appTypeSelectEl.selectedOptions[0].value);
-  });
-  // FILE INPUT
-  fileInput.addEventListener('change', () => {
-    if (fileInput.files.length > 0) {
-      convertBtn.style.display = 'block';
-    } else {
-      convertBtn.style.display = 'none';
-    }
-  });
-
-  // DYNAMIC CHANGES AROUND SELECTED APP TYPE
-  // Set defaults
-  const currentlySelectedOption = appTypeSelectEl.selectedOptions[0]
-  selectedAppEl[0].innerText = currentlySelectedOption.text;
-  selectedApp = currentlySelectedOption.value;
-  onSelectChange(currentlySelectedOption);
-
-  // Dynamically change text/link when <select> is changed
-  appTypeSelectEl.addEventListener('change', (e) => {
-    const el = e.target;
-    selectedAppEl[0].innerText = el.selectedOptions[0].text;
-    selectedAppEl[1].innerText = el.selectedOptions[0].text;
-
-    onSelectChange(el);
-    selectedApp = el.value;
-  });
-
-  /**
-   * Handles toggling help link text and whether the file input is visible/enabled.
-   * @param option The <option> element
-   */
-  function onSelectChange(option) {
-    if (APP_TYPE[option.value]) {
-      enableFileInput();
-      // If there is NO matching app (or DEFAULT), disable input
-    } else {
-      disableFileInput();
-    }
-
-    // If there is an export help link, show it
-    if (HELP_LINK_MAP[option.value]) {
-      enableHelpLink();
-      howToLinkEl.href = HELP_LINK_MAP[option.value];
-    // If the default option is select, hide the whole block
-    } else if (option.value === 'DEFAULT') {
-      disableHelpBlock();
-    // Otherwise disable the link
-    } else {
-      disableHelpLink();
-    }
-  }
-
-  // HELPERS
-  function enableHelpLink() {
-    howToDisclaimerEl.style.display = 'none';
-    howToLinkEl.style.display = 'block';
-  }
-
-  function disableHelpLink() {
-    howToDisclaimerEl.style.display = 'block';
-    howToLinkEl.style.display = 'none';
-    howToLinkEl.href = '#';
-    selectedAppEl[1].innerText = appTypeSelectEl.selectedOptions[0].text;
-  }
-
-  function disableHelpBlock() {
-    howToDisclaimerEl.style.display = 'none';
-    howToLinkEl.style.display = 'none';
-  }
-
-  function disableFileInput() {
-    fileInput.disabled = true;
-    fileUploadContainerEl.style.opacity = '0.5';
-  }
-
-  function enableFileInput() {
-    fileInput.disabled = false;
-    fileUploadContainerEl.style.opacity = '1';
-  }
 });
 
 // DEV_NOTE: ADD ASSOCIATED MAPPING FUNCTIONS HERE
@@ -163,17 +96,17 @@ function onConvertData(appType) {
         break;
     }
 
-    prepareDownload(csvData);
+    prepareDownload(csvData, appType);
   };
 
   reader.readAsText(file);
 }
 
-function prepareDownload(csvData) {
+function prepareDownload(csvData, appType) {
   const blob = new Blob([csvData], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
   const downloadLink = document.getElementById('download-link');
   downloadLink.href = url;
-  downloadLink.download = `${selectedApp}-to-drip.csv`;
+  downloadLink.download = `${appType}-to-drip.csv`;
   downloadLink.style.display = 'inline';
 }

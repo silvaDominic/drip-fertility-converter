@@ -13,10 +13,15 @@
     </head>
 
     <body>
-        <div id="main-container">
+        <div id="main-container" x-data="main">
             <div>
                 <div class="title-wrapper">
-                    <select id="app-type-select" name="app-type-select">
+                    <select
+                        id="app-type-select"
+                        name="app-type-select"
+                        x-model="selectedApp"
+                        @change="onSelectChange($event)"
+                    >
                         <option selected value="DEFAULT">Your fertility app</option>
                         <option value="RYB">Read Your Body</option>
                         <option value="PREMOM">Premom</option>
@@ -29,24 +34,39 @@
                 <h2 class="sub-title">Upload an exported data file from your current app to download a CSV file compatible with <span class="drip-text">drip.</span></h2>
             </div>
 
-            <div id="how-to-wrapper">
-                <a id="how-to-link" href="" target="_blank">
-                    How to export data with <span class="selected-app-text"></span>
+            <div id="how-to-wrapper" x-show="showHelpBlock">
+                <a
+                    id="how-to-link"
+                    :href="helpLink"
+                    target="_blank"
+                    x-show="showHelpLink">
+                    How to export data with <span class="selected-app-text" x-text="selectedAppText"></span>
                 </a>
-                <div id="how-to-disclaimer">
-                    <span class="selected-app-text"></span> doesn't provide instructions to export. Explore your settings around data or reach out to support.
+                <div id="how-to-disclaimer" x-show="!showHelpLink">
+                    <span class="selected-app-text" x-text="selectedAppText"></span> doesn't provide instructions to export. Explore your settings around data or reach out to support.
                 </div>
             </div>
 
-            <div id="file-upload-container">
-                <input id="file-input" type="file" disabled/>
+            <div id="file-upload-container" :class="disableFileInput ? 'disabled' : ''">
+                <input
+                    id="file-input"
+                    type="file"
+                    :disabled="disableFileInput"
+                    @change="onFileInputChange($event)"
+                />
                 <div>
                     <p>Drag your files here or click in this area.</p>
                     <a>Select a file</a>
                 </div>
             </div>
 
-            <button id="convert-button">Convert Data</button>
+            <button
+                id="convert-button"
+                x-show="showConvertButton"
+                @click="onConvert"
+            >
+                Convert Data
+            </button>
             <a id="download-link">Download Data</a>
         </div>
     </body>

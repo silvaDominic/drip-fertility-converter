@@ -91,7 +91,6 @@ select {
 }
 
 #how-to-disclaimer {
-    display: none;
     color: var(--red);
 }
 
@@ -120,7 +119,7 @@ select {
     cursor: pointer;
 }
 
-#convert-button, #download-link {
+#download-link {
     display: none;
 }
 
@@ -139,7 +138,7 @@ input[type="file"] {
     cursor: pointer;
 }
 
-input[disabled=""] {
+input[disabled="disabled"] {
     cursor: default;
 }
 
@@ -157,6 +156,10 @@ input[disabled=""] {
     text-align: center;
     font-size: 20px;
     font-weight: 500;
+    opacity: 1;
+}
+
+#file-upload-container.disabled {
     opacity: 0.5;
 }
 

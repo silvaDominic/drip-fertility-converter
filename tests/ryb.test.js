@@ -57,7 +57,7 @@ describe("RYB", () => {
         expect(result).toHaveProperty('temperature.exclude', false);
         expect(result).toHaveProperty('bleeding.value', null);
         expect(result).toHaveProperty('bleeding.exclude', null);
-        expect(result).toHaveProperty('mucus.feeling', 1);
+        expect(result).toHaveProperty('mucus.feeling', null);
         expect(result).toHaveProperty('mucus.texture', null);
         expect(result).toHaveProperty('mucus.exclude', false);
         expect(result).toHaveProperty('cervix.opening', null);

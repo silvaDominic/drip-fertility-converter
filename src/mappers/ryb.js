@@ -88,7 +88,7 @@ export function mapRYB(jsonData) {
       [DRIP_PROPS.TEMP_EXCLUDE]: false,
       [DRIP_PROPS.BLEEDING_VAL]: getBleedingValue(entry[RYB_PROPS.BLEEDING_VAL]) ?? null,
       [DRIP_PROPS.BLEEDING_EXCLUDE]: getBleedingValue(entry[RYB_PROPS.BLEEDING_VAL]) != null ? false : null, // Bleeding value/exclude must always be together AND valid
-      [DRIP_PROPS.VAG_FEELING]: VAG_SENS_MAP[entry[RYB_PROPS.VAG_SENS]] ?? 1, // Default to 1 (nothing)
+      [DRIP_PROPS.VAG_FEELING]: VAG_SENS_MAP[entry[RYB_PROPS.VAG_SENS]] ?? null,
       [DRIP_PROPS.C_MUCUS_TEXTURE]: getCervicalFluidValue(entry[RYB_PROPS.C_MUCUS_TEXTURE]) ?? null,
       [DRIP_PROPS.C_MUCUS_EXCLUDE]: false,
       [DRIP_PROPS.C_OPENING]: C_OPENING_MAP[entry[RYB_PROPS.C_OPENING]] ?? null,
